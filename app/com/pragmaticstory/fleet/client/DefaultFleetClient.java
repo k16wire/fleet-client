@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.pragmaticstory.fleet.client.WS2.*;
 import static java.lang.System.getenv;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -35,6 +36,8 @@ public class DefaultFleetClient implements FleetClient{
     private static final long DEFAULT_CONNECT_TIMEOUT_MILLIS = SECONDS.toMillis(5);
     private static final long DEFAULT_READ_TIMEOUT_MILLIS = SECONDS.toMillis(30);
 
+    private static final String GET = "get";
+
 
     private final WSClient client;
     private final URI uri;
@@ -49,21 +52,14 @@ public class DefaultFleetClient implements FleetClient{
         Json.setObjectMapper(ObjectMapperProvider.objectMapper());
         List<MachineEntity> machineEntityList = Lists.newArrayList();
 
-            resource().path("machines");
-
-
-        WS2.ResponseResult result = WS2
-                    .get(uri.toString() + "/machines");
-            switch(result.statusCode){
-                case 200:
-                    Iterator<JsonNode> machineNodes =
-                            result.body().get("machines").elements();
-                    while(machineNodes.hasNext()){
-                        JsonNode machine = machineNodes.next();
-                        machineEntityList.add(Json.fromJson(machine, MachineEntity.class));
-                    }
-                    return machineEntityList;
-            }
+        ResponseResult result =
+            request(GET, resource().path("machines"), DEFAULT_READ_TIMEOUT_MILLIS);
+        Iterator<JsonNode> machineNodes =
+            result.body().get("machines").elements();
+        while(machineNodes.hasNext()){
+            JsonNode machine = machineNodes.next();
+            machineEntityList.add(Json.fromJson(machine, MachineEntity.class));
+        }
         return machineEntityList;
     }
 
@@ -72,8 +68,8 @@ public class DefaultFleetClient implements FleetClient{
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    private WS2.Resource resource(){
-        return new WS2.Resource(uri);
+    private Resource resource(){
+        return new Resource(uri).path("fleet").path(VERSION);
     }
 
     private static String defaultEndPoint(){
@@ -89,7 +85,7 @@ public class DefaultFleetClient implements FleetClient{
         final String address = isNullOrEmpty(hostText) ? DEFAULT_HOST : hostText;
 
         final Builder builder = new Builder();
-        builder.uri("http" + "://" + address + ":" + port + "/fleet/" + VERSION);
+        builder.uri("http" + "://" + address + ":" + port);
 
         return builder;
     }
