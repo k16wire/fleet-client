@@ -1,6 +1,7 @@
 package com.pragmaticstory.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
@@ -100,6 +101,17 @@ public class DefaultFleetClient implements FleetClient{
                 result.statusText = "DELETED";
                 break;
         }
+        return result;
+    }
+
+    @Override
+    public ResponseResult modifyUnit(String name, String state) throws FleetException {
+        ObjectNode body = Json.newObject();
+        body.put("desiredState", state);
+        ResponseResult result = request(PUT,
+                resource().path("units").path(name),
+                DEFAULT_READ_TIMEOUT_MILLIS,
+                body);
         return result;
     }
 

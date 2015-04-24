@@ -18,18 +18,20 @@ import static org.fest.assertions.Assertions.assertThat;
  * Date: 15. 4. 23.
  * Time: 오후 2:07
  */
-public class DefaultFleetClientTest extends AbstractTest {
+public class DefaultFleetClientTest extends AbstractTest{
     private DefaultFleetClient sut;
     private List<String> units = Lists.newArrayList();
 
     @Before
-    public void setup() throws Exception{
+    public void before() throws Exception{
+        super.before();
         final DefaultFleetClient.Builder builder = DefaultFleetClient.fromEnv();
         sut = builder.build();
     }
 
     @After
-    public void tearDown() throws Exception{
+    public void after() throws Exception{
+        super.after();
         // Remove units
         for(String unitName:units){
             sut.destroyUnit(unitName);
@@ -37,7 +39,7 @@ public class DefaultFleetClientTest extends AbstractTest {
     }
 
     @Test
-    public void 헬로우월드컨테이너() throws Exception{
+    public void createHelloService() throws Exception{
         //Given
         UnitEntity unitEntity = UnitConfig.builder()
                 .withDesiredState("launched")
