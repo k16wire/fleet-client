@@ -29,6 +29,14 @@ public class DefaultFleetClientTest extends AbstractTest {
         // Remove units
     }
 
+    @Test(expected = FleetRequestException.class)
+    public void connection() throws Exception{
+        // given
+        DefaultFleetClient client = new DefaultFleetClient("127.0.0.1");
+        // when
+        client.listMachines();
+    }
+
     @Test
     public void listMachines() throws Exception {
         // when

@@ -17,20 +17,9 @@ import java.util.concurrent.TimeUnit;
  * Time: 오후 1:58
  */
 public class WS2 extends WS{
-    public static ResponseResult request(String method,Resource resource, long timeout) throws FleetException {
-        Logger.debug(method + ":" + resource.uri());
-        ResponseResult result = null;
-        switch (method){
-            case "get":
-                result = get(resource,timeout);
-                break;
-        }
-        return result;
-    }
-
-    private static ResponseResult get(Resource resource,
+    public static ResponseResult get(Resource resource,
                                      long timeout)
-            throws FleetException{
+            throws FleetRequestException{
         F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
                 .get()
                 .map(new WSResponseResponseResultFunction());

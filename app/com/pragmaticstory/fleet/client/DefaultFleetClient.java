@@ -6,9 +6,8 @@ import com.google.common.net.HostAndPort;
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
 import com.pragmaticstory.fleet.client.messages.ObjectMapperProvider;
 import com.pragmaticstory.fleet.client.messages.UnitEntity;
+import play.Logger;
 import play.libs.Json;
-import play.libs.ws.WS;
-import play.libs.ws.WSClient;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -32,18 +31,22 @@ public class DefaultFleetClient implements FleetClient{
     private static final String VERSION = "v1";
 
     public static final long NO_TIMEOUT = 0;
-
     private static final long DEFAULT_CONNECT_TIMEOUT_MILLIS = SECONDS.toMillis(5);
     private static final long DEFAULT_READ_TIMEOUT_MILLIS = SECONDS.toMillis(30);
 
     private static final String GET = "get";
 
-
-    private final WSClient client;
     private final URI uri;
 
+    public DefaultFleetClient(final String uri){
+        this(URI.create(uri));
+    }
+
+    public DefaultFleetClient(final URI uri){
+        this(new Builder().uri(uri));
+    }
+
     protected DefaultFleetClient(final Builder builder){
-        this.client = WS.client();
         this.uri = builder.uri;
     }
 
@@ -52,10 +55,13 @@ public class DefaultFleetClient implements FleetClient{
         Json.setObjectMapper(ObjectMapperProvider.objectMapper());
         List<MachineEntity> machineEntityList = Lists.newArrayList();
 
-        ResponseResult result =
-            request(GET, resource().path("machines"), DEFAULT_READ_TIMEOUT_MILLIS);
+        ResponseResult result = null;
+        result = request(GET,
+            resource().path("machines"),
+            DEFAULT_READ_TIMEOUT_MILLIS);
+
         Iterator<JsonNode> machineNodes =
-            result.body().get("machines").elements();
+                result.body().get("machines").elements();
         while(machineNodes.hasNext()){
             JsonNode machine = machineNodes.next();
             machineEntityList.add(Json.fromJson(machine, MachineEntity.class));
@@ -66,6 +72,49 @@ public class DefaultFleetClient implements FleetClient{
     @Override
     public void createUnit(UnitEntity unitEntity, String name) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Before send a request, it check connection is available.
+     *
+     * @param method
+     * @param resource
+     * @param timeout
+     * @return
+     * @throws FleetException
+     */
+    public ResponseResult request(String method, Resource resource, long timeout) throws FleetException {
+        Logger.debug(method + ":" + resource.uri());
+
+        try{
+            get(resource(), DEFAULT_CONNECT_TIMEOUT_MILLIS);
+        }catch (Exception e){
+            throw new FleetRequestException(method, resource().uri(),
+                400, "Fleet server is not available", e);
+        }
+
+        ResponseResult result = null;
+        try{
+            switch (method){
+                case "get":
+                    result = get(resource, timeout);
+                    break;
+            }
+        }catch(Exception e){
+            if(result==null)
+                throw new FleetRequestException(method, resource.uri(), e);
+            else
+                throw new FleetRequestException(method, resource.uri(),
+                        result.statusCode, result.statusText, e);
+        }
+
+        switch (result.statusCode){
+            case 404:
+            case 405:
+                throw new FleetException(result.statusText);
+        }
+
+        return result;
     }
 
     private Resource resource(){
@@ -92,10 +141,6 @@ public class DefaultFleetClient implements FleetClient{
 
     public static class Builder {
         private URI uri;
-
-        public URI uri(){
-            return uri;
-        }
 
         public Builder uri(final URI uri){
             this.uri = uri;

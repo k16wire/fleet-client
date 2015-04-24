@@ -45,4 +45,8 @@ public class FleetRequestException extends FleetException{
         this.status = status;
         this.message = message;
     }
+
+    public int status() {
+        return status;
+    }
 }
