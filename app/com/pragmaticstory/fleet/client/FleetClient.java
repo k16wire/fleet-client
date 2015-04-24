@@ -12,6 +12,6 @@ import java.util.List;
  */
 public interface FleetClient {
     public List<MachineEntity> listMachines() throws FleetException;
-    public void createUnit(UnitEntity unitEntity, String name);
-
+    public WS2.ResponseResult createUnit(UnitEntity unitEntity, String name) throws FleetException;
+    public WS2.ResponseResult destroyUnit(String name) throws FleetException;
 }

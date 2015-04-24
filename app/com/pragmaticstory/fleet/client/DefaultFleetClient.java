@@ -35,6 +35,8 @@ public class DefaultFleetClient implements FleetClient{
     private static final long DEFAULT_READ_TIMEOUT_MILLIS = SECONDS.toMillis(30);
 
     private static final String GET = "get";
+    private static final String PUT = "put";
+    private static final String DELETE = "delete";
 
     private final URI uri;
 
@@ -51,12 +53,12 @@ public class DefaultFleetClient implements FleetClient{
     }
 
     @Override
-    public List<MachineEntity> listMachines() throws FleetException{
+    public List<MachineEntity> listMachines()
+            throws FleetException{
         Json.setObjectMapper(ObjectMapperProvider.objectMapper());
         List<MachineEntity> machineEntityList = Lists.newArrayList();
 
-        ResponseResult result = null;
-        result = request(GET,
+        ResponseResult result = request(GET,
             resource().path("machines"),
             DEFAULT_READ_TIMEOUT_MILLIS);
 
@@ -70,8 +72,40 @@ public class DefaultFleetClient implements FleetClient{
     }
 
     @Override
-    public void createUnit(UnitEntity unitEntity, String name) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public ResponseResult createUnit(UnitEntity unitEntity, String name)
+            throws FleetException{
+        ResponseResult result = request(PUT,
+            resource().path("units").path(name),
+            DEFAULT_READ_TIMEOUT_MILLIS,
+            Json.toJson(unitEntity));
+        switch(result.statusCode){
+            case 201:
+                result.statusText = "Created";
+                break;
+            case 204:
+                result.statusText = "Existed";
+                break;
+        }
+        return result;
+    }
+
+    @Override
+    public ResponseResult destroyUnit(String name)
+            throws FleetException {
+        ResponseResult result = request(DELETE,
+                resource().path("units").path(name),
+                DEFAULT_READ_TIMEOUT_MILLIS);
+        switch(result.statusCode){
+            case 204:
+                result.statusText = "DELETED";
+                break;
+        }
+        return result;
+    }
+
+    public ResponseResult request(String method, Resource resource, long timeout)
+            throws FleetException {
+        return request(method, resource, timeout, null);
     }
 
     /**
@@ -83,7 +117,8 @@ public class DefaultFleetClient implements FleetClient{
      * @return
      * @throws FleetException
      */
-    public ResponseResult request(String method, Resource resource, long timeout) throws FleetException {
+    public ResponseResult request(String method, Resource resource, long timeout, JsonNode body)
+            throws FleetException {
         Logger.debug(method + ":" + resource.uri());
 
         try{
@@ -96,8 +131,14 @@ public class DefaultFleetClient implements FleetClient{
         ResponseResult result = null;
         try{
             switch (method){
-                case "get":
+                case GET:
                     result = get(resource, timeout);
+                    break;
+                case PUT:
+                    result = put(resource, timeout, body);
+                    break;
+                case DELETE:
+                    result = delete(resource, timeout);
                     break;
             }
         }catch(Exception e){

@@ -26,6 +26,23 @@ public class WS2 extends WS{
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
+    public static ResponseResult put(Resource resource, long timeout, JsonNode body)
+            throws FleetRequestException{
+        F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
+                .put(body)
+                .map(new WSResponseResponseResultFunction());
+        return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
+    }
+
+    public static ResponseResult delete(Resource resource,
+                                        long timeout)
+            throws FleetRequestException{
+        F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
+                .delete()
+                .map(new WSResponseResponseResultFunction());
+        return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
+    }
+
     private static class WSResponseResponseResultFunction implements F.Function<WSResponse, ResponseResult> {
         @Override
         public ResponseResult apply(WSResponse wsResponse) throws Throwable {

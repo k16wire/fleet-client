@@ -1,7 +1,10 @@
 package com.pragmaticstory.fleet.client;
 
+import com.google.common.collect.Lists;
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
+import com.pragmaticstory.fleet.client.messages.UnitEntity;
 import com.pragmaticstory.helpers.AbstractTest;
+import com.pragmaticstory.helpers.RWG;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class DefaultFleetClientTest extends AbstractTest {
     private DefaultFleetClient sut;
+    private List<String> units = Lists.newArrayList();
 
     @Before
     public void setup() throws Exception{
@@ -27,6 +31,28 @@ public class DefaultFleetClientTest extends AbstractTest {
     @After
     public void tearDown() throws Exception{
         // Remove units
+        for(String unitName:units){
+            sut.destroyUnit(unitName);
+        }
+    }
+
+    @Test
+    public void 헬로우월드컨테이너() throws Exception{
+        //Given
+        UnitEntity unitEntity = UnitConfig.builder()
+                .withDesiredState("launched")
+                .withExecStartPre("/usr/bin/docker pull busybox")
+                .withExecStart("/usr/bin/docker run --name helloservice busybox echo hello world")
+                .withExecStopPre("/usr/bin/docker kill helloservice")
+                .withExecStop("/usr/bin/docker rm helloservice")
+                .withTimeoutStartSec(0)
+                .build();
+        String unitName = RWG.randomWord(6)+".service";
+        units.add(unitName);
+        //When
+        WS2.ResponseResult result = sut.createUnit(unitEntity, unitName);
+        //Then
+        assertThat(result.statusCode).isEqualTo(201);
     }
 
     @Test(expected = FleetRequestException.class)
@@ -44,5 +70,4 @@ public class DefaultFleetClientTest extends AbstractTest {
         // then
         assertThat(machineEntities.size()).isEqualTo(3);
     }
-
 }
