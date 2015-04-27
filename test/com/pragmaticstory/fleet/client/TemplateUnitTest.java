@@ -33,20 +33,28 @@ public class TemplateUnitTest extends AbstractTest {
         super.after();
         // Remove units
         for(String unitName:units){
-//            sut.destroyUnit(unitName);
+            sut.destroyUnit(unitName);
         }
     }
 
     @Test
-    public void createApacheUnit() throws Exception{
+    public void launchNginxUnit() throws Exception{
+        // when
+        WS2.ResponseResult result = sut.modifyUnit("apache@1.service", LAUNCHED);
+        // then
+        assertThat(result.statusCode).isEqualTo(409);
+    }
+
+    @Test
+    public void createApacheUnitTemplate() throws Exception{
         //Given
-        String containerName = "apache1";
+        String containerName = "apache";
         String imageName = "coreos/apache";
         UnitEntity unitEntity = builder()
                 .withDescription(containerName)
                 .withAfter(DOCKER_SERVICE)
                 .withRequires(DOCKER_SERVICE)
-                .withDesiredState(LOADED)
+                .withDesiredState(INACTIVE)
                 .withExecStartPre(kill(containerName))
                 .withExecStartPre(rm(containerName))
                 .withExecStartPre(pull(imageName))
@@ -54,7 +62,7 @@ public class TemplateUnitTest extends AbstractTest {
                 .withXConflicts("apache@*.service")
                 .withTimeoutStartSec(0)
                 .build();
-        String unitName = containerName+".service";
+        String unitName = containerName+"@.service";
         units.add(unitName);
         //When
         WS2.ResponseResult result = sut.createUnit(unitEntity, unitName);
