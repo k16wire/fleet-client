@@ -7,6 +7,7 @@ import com.google.common.net.HostAndPort;
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
 import com.pragmaticstory.fleet.client.messages.ObjectMapperProvider;
 import com.pragmaticstory.fleet.client.messages.UnitEntity;
+import com.pragmaticstory.fleet.client.messages.UnitEntityInfo;
 import play.Logger;
 import play.libs.Json;
 
@@ -108,11 +109,27 @@ public class DefaultFleetClient implements FleetClient{
     public ResponseResult modifyUnit(String name, String state) throws FleetException {
         ObjectNode body = Json.newObject();
         body.put("desiredState", state);
-        ResponseResult result = request(PUT,
+        return request(PUT,
                 resource().path("units").path(name),
                 DEFAULT_READ_TIMEOUT_MILLIS,
                 body);
-        return result;
+    }
+
+    @Override
+    public List<UnitEntityInfo> listUnits() throws FleetException {
+        List<UnitEntityInfo> unitEntityInfoList = Lists.newArrayList();
+
+        ResponseResult result = request(GET,
+                resource().path("units"),
+                DEFAULT_READ_TIMEOUT_MILLIS);
+
+        JsonNode units = result.body().get("units");
+        Iterator<JsonNode> it = units.iterator();
+        while(it.hasNext()){
+            JsonNode unit = it.next();
+            unitEntityInfoList.add(Json.fromJson(unit,UnitEntityInfo.class));
+        }
+        return unitEntityInfoList;
     }
 
     public ResponseResult request(String method, Resource resource, long timeout)

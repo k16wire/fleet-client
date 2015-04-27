@@ -3,6 +3,7 @@ package com.pragmaticstory.fleet.client;
 import com.google.common.collect.Lists;
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
 import com.pragmaticstory.fleet.client.messages.UnitEntity;
+import com.pragmaticstory.fleet.client.messages.UnitEntityInfo;
 import com.pragmaticstory.helpers.AbstractTest;
 import com.pragmaticstory.helpers.RWG;
 import org.junit.After;
@@ -31,7 +32,6 @@ public class DefaultFleetClientTest extends AbstractTest{
 
     @After
     public void after() throws Exception{
-        super.after();
         // Remove units
         for(String unitName:units){
             sut.destroyUnit(unitName);
@@ -71,5 +71,13 @@ public class DefaultFleetClientTest extends AbstractTest{
         List<MachineEntity> machineEntities = sut.listMachines();
         // then
         assertThat(machineEntities.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void listUnits() throws Exception{
+        // when
+        List<UnitEntityInfo> unitEntityInfoList = sut.listUnits();
+        // then
+        assertThat(unitEntityInfoList).isNotEmpty();
     }
 }

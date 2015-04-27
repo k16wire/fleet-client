@@ -2,6 +2,7 @@ package com.pragmaticstory.fleet.client;
 
 import com.pragmaticstory.fleet.client.messages.MachineEntity;
 import com.pragmaticstory.fleet.client.messages.UnitEntity;
+import com.pragmaticstory.fleet.client.messages.UnitEntityInfo;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface FleetClient {
     public WS2.ResponseResult createUnit(UnitEntity unitEntity, String name) throws FleetException;
     public WS2.ResponseResult destroyUnit(String name) throws FleetException;
     public WS2.ResponseResult modifyUnit(String name, String state) throws FleetException;
+    public List<UnitEntityInfo> listUnits() throws FleetException;
 }
