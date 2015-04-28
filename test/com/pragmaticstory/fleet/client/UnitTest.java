@@ -3,9 +3,9 @@ package com.pragmaticstory.fleet.client;
 import com.google.common.collect.Lists;
 import com.pragmaticstory.fleet.client.messages.UnitEntity;
 import com.pragmaticstory.helpers.AbstractTest;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
