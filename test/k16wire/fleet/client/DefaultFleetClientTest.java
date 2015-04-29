@@ -1,11 +1,11 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import com.google.common.collect.Lists;
-import com.pragmaticstory.fleet.client.messages.MachineEntity;
-import com.pragmaticstory.fleet.client.messages.UnitEntity;
-import com.pragmaticstory.fleet.client.messages.UnitEntityInfo;
-import com.pragmaticstory.helpers.AbstractTest;
-import com.pragmaticstory.helpers.RWG;
+import k16wire.fleet.client.messages.MachineEntity;
+import k16wire.fleet.client.messages.UnitEntity;
+import k16wire.fleet.client.messages.UnitEntityInfo;
+import k16wire.helpers.AbstractTest;
+import k16wire.helpers.RWG;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

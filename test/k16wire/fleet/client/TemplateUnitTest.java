@@ -1,15 +1,15 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import com.google.common.collect.Lists;
-import com.pragmaticstory.fleet.client.messages.UnitEntity;
-import com.pragmaticstory.helpers.AbstractTest;
+import k16wire.fleet.client.messages.UnitEntity;
+import k16wire.helpers.AbstractTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.pragmaticstory.fleet.client.UnitConfig.*;
+import static k16wire.fleet.client.UnitConfig.*;
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -30,7 +30,6 @@ public class TemplateUnitTest extends AbstractTest {
 
     @After
     public void after() throws Exception{
-        super.after();
         // Remove units
         for(String unitName:units){
             sut.destroyUnit(unitName);

@@ -1,13 +1,13 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
-import com.pragmaticstory.fleet.client.messages.MachineEntity;
-import com.pragmaticstory.fleet.client.messages.ObjectMapperProvider;
-import com.pragmaticstory.fleet.client.messages.UnitEntity;
-import com.pragmaticstory.fleet.client.messages.UnitEntityInfo;
+import k16wire.fleet.client.messages.MachineEntity;
+import k16wire.fleet.client.messages.ObjectMapperProvider;
+import k16wire.fleet.client.messages.UnitEntity;
+import k16wire.fleet.client.messages.UnitEntityInfo;
 import play.Logger;
 import play.libs.Json;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.pragmaticstory.fleet.client.WS2.*;
+import static k16wire.fleet.client.WS2.*;
 import static java.lang.System.getenv;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -26,7 +26,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Date: 15. 4. 23.
  * Time: 오후 2:05
  */
-public class DefaultFleetClient implements FleetClient{
+public class DefaultFleetClient implements FleetClient {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 49153;
 
@@ -56,7 +56,7 @@ public class DefaultFleetClient implements FleetClient{
 
     @Override
     public List<MachineEntity> listMachines()
-            throws FleetException{
+            throws FleetException {
         Json.setObjectMapper(ObjectMapperProvider.objectMapper());
         List<MachineEntity> machineEntityList = Lists.newArrayList();
 

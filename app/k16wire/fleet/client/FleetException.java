@@ -1,4 +1,4 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 /**
  * Date: 15. 4. 23.

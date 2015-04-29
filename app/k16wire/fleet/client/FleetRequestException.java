@@ -1,4 +1,4 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import java.net.URI;
 
@@ -6,7 +6,7 @@ import java.net.URI;
  * Date: 15. 4. 23.
  * Time: 오후 7:15
  */
-public class FleetRequestException extends FleetException{
+public class FleetRequestException extends FleetException {
     private final String method;
     private final URI uri;
     private final int status;

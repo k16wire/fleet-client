@@ -1,4 +1,4 @@
-package com.pragmaticstory.fleet.client.messages;
+package k16wire.fleet.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,4 +20,24 @@ public class UnitEntityInfo {
     @JsonProperty("machineID") private String machineID;
     @JsonProperty("name") private String name;
     @JsonProperty("options") private List<UnitOption> options;
+
+    public String currentState(){
+        return this.currentState;
+    }
+
+    public String desiredState(){
+        return this.desiredState;
+    }
+
+    public String machineID(){
+        return this.machineID;
+    }
+
+    public String name(){
+        return this.name;
+    }
+
+    public List<UnitOption> options(){
+        return options;
+    }
 }

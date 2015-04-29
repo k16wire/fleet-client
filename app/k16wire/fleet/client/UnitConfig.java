@@ -1,8 +1,8 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import com.google.common.collect.Lists;
-import com.pragmaticstory.fleet.client.messages.UnitEntity;
-import com.pragmaticstory.fleet.client.messages.UnitOption;
+import k16wire.fleet.client.messages.UnitEntity;
+import k16wire.fleet.client.messages.UnitOption;
 
 import java.util.List;
 

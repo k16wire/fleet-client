@@ -1,4 +1,4 @@
-package com.pragmaticstory.helpers;
+package k16wire.helpers;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

@@ -1,4 +1,4 @@
-package com.pragmaticstory.fleet.client;
+package k16wire.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class WS2 extends WS{
     public static ResponseResult get(Resource resource,
                                      long timeout)
-            throws FleetRequestException{
+            throws FleetRequestException {
         F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
                 .get()
                 .map(new WSResponseResponseResultFunction());

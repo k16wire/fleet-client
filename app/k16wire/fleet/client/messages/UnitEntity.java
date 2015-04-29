@@ -1,4 +1,4 @@
-package com.pragmaticstory.fleet.client.messages;
+package k16wire.fleet.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
