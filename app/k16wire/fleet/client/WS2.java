@@ -17,27 +17,36 @@ import java.util.concurrent.TimeUnit;
  * Time: 오후 1:58
  */
 public class WS2 extends WS{
-    public static ResponseResult get(Resource resource,
+    public static ResponseResult get(String url,
                                      long timeout)
             throws FleetRequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
+        F.Promise<ResponseResult> responseResultPromise = url(url)
                 .get()
                 .map(new WSResponseResponseResultFunction());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
-    public static ResponseResult put(Resource resource, long timeout, JsonNode body)
+    public static ResponseResult post(String url,
+                                     long timeout, JsonNode body)
+            throws FleetRequestException {
+        F.Promise<ResponseResult> responseResultPromise = url(url)
+                .post(body)
+                .map(new WSResponseResponseResultFunction());
+        return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
+    }
+
+    public static ResponseResult put(String url, long timeout, JsonNode body)
             throws FleetRequestException{
-        F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
+        F.Promise<ResponseResult> responseResultPromise = url(url)
                 .put(body)
                 .map(new WSResponseResponseResultFunction());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
-    public static ResponseResult delete(Resource resource,
+    public static ResponseResult delete(String url,
                                         long timeout)
             throws FleetRequestException{
-        F.Promise<ResponseResult> responseResultPromise = url(resource.uri().toString())
+        F.Promise<ResponseResult> responseResultPromise = url(url)
                 .delete()
                 .map(new WSResponseResponseResultFunction());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
@@ -53,23 +62,6 @@ public class WS2 extends WS{
             responseResult.statusText = wsResponse.getStatusText();
             responseResult.body = wsResponse.getBody();
             return responseResult;
-        }
-    }
-
-    public static class Resource {
-        private URI uri;
-
-        public Resource(URI uri){
-            this.uri = uri;
-        }
-
-        public URI uri(){
-            return this.uri;
-        }
-
-        public Resource path(String path){
-            this.uri = URI.create(uri.toString() + "/" + path);
-            return this;
         }
     }
 
