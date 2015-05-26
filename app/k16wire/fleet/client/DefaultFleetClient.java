@@ -1,7 +1,6 @@
 package k16wire.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import k16wire.fleet.client.messages.MachineEntity;
@@ -17,10 +16,9 @@ import java.util.List;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.base.Strings.repeat;
 import static k16wire.fleet.client.WS2.*;
 import static java.lang.System.getenv;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static k16wire.fleet.client.WS2.Json2.*;
 
 /**
  * User: 1001923
@@ -28,11 +26,11 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Time: 오후 2:05
  */
 public class DefaultFleetClient extends RestClient implements FleetClient {
-    public static final String DEFAULT_HOST = "localhost";
-    public static final int DEFAULT_PORT = 49153;
-    private static final String VERSION = "v1";
+    private static final String ENV_FLEET_HOST = "FLEET_HOST";
 
-//    private final URI uri;
+    private static final String DEFAULT_HOST = "localhost";
+    private static final int DEFAULT_PORT = 49153;
+    private static final String VERSION = "v1";
 
     public DefaultFleetClient(final String uri){
         this(URI.create(uri));
@@ -49,13 +47,12 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
     @Override
     public List<MachineEntity> listMachines()
             throws FleetException {
-        Json.setObjectMapper(ObjectMapperProvider.objectMapper());
-        List<MachineEntity> machineEntityList = Lists.newArrayList();
-
         ResponseResult result = request(GET,
             resource().path("machines"),
             DEFAULT_READ_TIMEOUT_MILLIS);
 
+        Json.setObjectMapper(ObjectMapperProvider.objectMapper());
+        List<MachineEntity> machineEntityList = Lists.newArrayList();
         Iterator<JsonNode> machineNodes =
                 result.body().get("machines").elements();
         while(machineNodes.hasNext()){
@@ -99,23 +96,23 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
 
     @Override
     public ResponseResult modifyUnit(String name, String state) throws FleetException {
-        ObjectNode body = Json.newObject();
-        body.put("desiredState", state);
         return request(PUT,
                 resource().path("units").path(name),
                 DEFAULT_READ_TIMEOUT_MILLIS,
-                body);
+                body()
+                        .put("desiredState", state)
+                        .jsonNode());
     }
 
     @Override
     public List<UnitEntityInfo> listUnits() throws FleetException {
-        List<UnitEntityInfo> unitEntityInfoList = Lists.newArrayList();
-
         ResponseResult result = request(GET,
                 resource().path("units"),
                 DEFAULT_READ_TIMEOUT_MILLIS);
 
         JsonNode units = result.body().get("units");
+
+        List<UnitEntityInfo> unitEntityInfoList = Lists.newArrayList();
         Iterator<JsonNode> it = units.iterator();
         while(it.hasNext()){
             JsonNode unit = it.next();
@@ -145,7 +142,7 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
         try{
             get(resource().url(), DEFAULT_CONNECT_TIMEOUT_MILLIS);
         }catch (Exception e){
-            throw new FleetRequestException(method, resource().uri(),
+            throw new RequestException(method, resource().uri(),
                 400, "Fleet server is not available", e);
         }
 
@@ -167,9 +164,9 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
             }
         }catch(Exception e){
             if(result==null)
-                throw new FleetRequestException(method, resource.uri(), e);
+                throw new RequestException(method, resource.uri(), e);
             else
-                throw new FleetRequestException(method, resource.uri(),
+                throw new RequestException(method, resource.uri(),
                         result.statusCode, result.statusText, e);
         }
 
@@ -191,7 +188,7 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
     }
 
     public static Builder fromEnv() {
-        final String endpoint = fromNullable(getenv("FLEET_HOST")).or(defaultEndPoint());
+        final String endpoint = fromNullable(getenv(ENV_FLEET_HOST)).or(defaultEndPoint());
         final String stripped = endpoint.replaceAll(".*://", "");
         final HostAndPort hostAndPort = HostAndPort.fromString(stripped);
         final String hostText = hostAndPort.getHostText();

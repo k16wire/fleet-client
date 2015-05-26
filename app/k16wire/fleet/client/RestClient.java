@@ -12,6 +12,7 @@ public class RestClient {
     protected static final String POST = "post";
     protected static final String PUT = "put";
     protected static final String DELETE = "delete";
+    protected static final String OPTIONS = "options";
 
     protected static final long NO_TIMEOUT = 0;
     protected static final long DEFAULT_CONNECT_TIMEOUT_MILLIS = SECONDS.toMillis(5);

@@ -68,7 +68,7 @@ public class UnitTest extends AbstractTest{
         String unitName = containerName+".service";
         units.add(unitName);
         //When
-        WS2.ResponseResult result = sut.createUnit(unitEntity, unitName);
+        ResponseResult result = sut.createUnit(unitEntity, unitName);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
     }

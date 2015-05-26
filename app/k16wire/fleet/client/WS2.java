@@ -8,7 +8,6 @@ import play.libs.Json;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 
-import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,43 +18,52 @@ import java.util.concurrent.TimeUnit;
 public class WS2 extends WS{
     public static ResponseResult get(String url,
                                      long timeout)
-            throws FleetRequestException {
+            throws RequestException {
         F.Promise<ResponseResult> responseResultPromise = url(url)
                 .get()
-                .map(new WSResponseResponseResultFunction());
+                .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
     public static ResponseResult post(String url, long timeout, JsonNode body)
-            throws FleetRequestException{
+            throws RequestException {
         F.Promise<ResponseResult> responseResultPromise = url(url)
                 .post(body)
-                .map(new WSResponseResponseResultFunction());
+                .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
     public static ResponseResult put(String url, long timeout, JsonNode body)
-            throws FleetRequestException{
+            throws RequestException {
         F.Promise<ResponseResult> responseResultPromise = url(url)
                 .put(body)
-                .map(new WSResponseResponseResultFunction());
+                .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
     public static ResponseResult delete(String url,
                                         long timeout)
-            throws FleetRequestException{
+            throws RequestException {
         F.Promise<ResponseResult> responseResultPromise = url(url)
                 .delete()
-                .map(new WSResponseResponseResultFunction());
+                .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
-    private static class WSResponseResponseResultFunction implements F.Function<WSResponse, ResponseResult> {
+    public static ResponseResult options(String url, long timeout)
+            throws RequestException {
+        F.Promise<ResponseResult> responseResultPromise = url(url)
+                .options()
+                .map(new WSResponseResult());
+        return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
+    }
+
+    private static class WSResponseResult implements F.Function<WSResponse, ResponseResult> {
         @Override
         public ResponseResult apply(WSResponse wsResponse) throws Throwable {
             Logger.debug(wsResponse.getStatus()+":"+wsResponse.getStatusText());
             Logger.debug(wsResponse.getBody());
+
             ResponseResult responseResult = new ResponseResult();
             responseResult.statusCode = wsResponse.getStatus();
             responseResult.statusText = wsResponse.getStatusText();
@@ -64,20 +72,22 @@ public class WS2 extends WS{
         }
     }
 
-    public static class ResponseResult {
-        public int statusCode;
-        public String statusText;
-        public String body;
+    public static class Json2 {
+        private ObjectNode objectNode;
 
-        public JsonNode body(){
-            return Json.parse(body);
+        public JsonNode jsonNode(){
+            return this.objectNode;
         }
 
-        public ObjectNode asJson(){
-            ObjectNode objectNode = Json.newObject();
-            objectNode.put("statusCode",statusCode);
-            objectNode.put("statusText",statusText);
-            return objectNode;
+        public Json2 put(String key, String value){
+            this.objectNode.put(key, value);
+            return this;
+        }
+
+        public static Json2 body(){
+            Json2 json2 = new Json2();
+            json2.objectNode = Json.newObject();
+            return json2;
         }
     }
 }

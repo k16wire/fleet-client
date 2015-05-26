@@ -56,7 +56,7 @@ public class SidekickTest extends AbstractTest {
         String mainUnit = mainContainer+".service";
         units.add(mainUnit);
         // when
-        WS2.ResponseResult result = sut.createUnit(mainUnitEntity, mainUnit);
+        ResponseResult result = sut.createUnit(mainUnitEntity, mainUnit);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
 
@@ -79,7 +79,7 @@ public class SidekickTest extends AbstractTest {
 //        assertThat(result2.statusCode).isEqualTo(201);
 
         // when
-        WS2.ResponseResult modifyResult = sut.modifyUnit(mainUnit, LAUNCHED);
+        ResponseResult modifyResult = sut.modifyUnit(mainUnit, LAUNCHED);
         assertThat(modifyResult.statusCode).isEqualTo(204);
 
         // when
@@ -110,7 +110,7 @@ public class SidekickTest extends AbstractTest {
     private void createSidekickUnit(UnitEntity sidekickUnitEntity, String sidekickUnit) throws FleetException {
         // when
         units.add(sidekickUnit);
-        WS2.ResponseResult result = sut.createUnit(sidekickUnitEntity, sidekickUnit);
+        ResponseResult result = sut.createUnit(sidekickUnitEntity, sidekickUnit);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
     }
@@ -146,21 +146,21 @@ public class SidekickTest extends AbstractTest {
         // given
         units.add(mainUnit);
         // when
-        WS2.ResponseResult result = sut.createUnit(mainUnitEntity, mainUnit);
+        ResponseResult result = sut.createUnit(mainUnitEntity, mainUnit);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
     }
 
     public void startBusyboxUnit(String mainUnit) throws Exception{
         // when
-        WS2.ResponseResult modifyResult = sut.modifyUnit(mainUnit, LAUNCHED);
+        ResponseResult modifyResult = sut.modifyUnit(mainUnit, LAUNCHED);
         assertThat(modifyResult.statusCode).isEqualTo(204);
     }
 
     public void startSidekickUnit(String sidekickUnit) throws Exception{
         // when
-        WS2.ResponseResult modifyResult = sut.modifyUnit(sidekickUnit, LAUNCHED);
-        assertThat(modifyResult.statusCode).isEqualTo(204);
+        ResponseResult modifyResult = sut.modifyUnit(sidekickUnit, LAUNCHED);
+        assertThat(modifyResult.statusCode).isEqualTo(201);
     }
 
 //    public void createBusyboxSidekickUnit() throws Exception{

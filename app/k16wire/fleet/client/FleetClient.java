@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface FleetClient {
     public List<MachineEntity> listMachines() throws FleetException;
-    public WS2.ResponseResult createUnit(UnitEntity unitEntity, String name) throws FleetException;
-    public WS2.ResponseResult destroyUnit(String name) throws FleetException;
-    public WS2.ResponseResult modifyUnit(String name, String state) throws FleetException;
+    public ResponseResult createUnit(UnitEntity unitEntity, String name) throws FleetException;
+    public ResponseResult destroyUnit(String name) throws FleetException;
+    public ResponseResult modifyUnit(String name, String state) throws FleetException;
     public List<UnitEntityInfo> listUnits() throws FleetException;
 }

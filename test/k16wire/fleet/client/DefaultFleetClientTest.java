@@ -52,12 +52,12 @@ public class DefaultFleetClientTest extends AbstractTest{
         String unitName = RWG.randomWord(6)+".service";
         units.add(unitName);
         //When
-        WS2.ResponseResult result = sut.createUnit(unitEntity, unitName);
+        ResponseResult result = sut.createUnit(unitEntity, unitName);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
     }
 
-    @Test(expected = FleetRequestException.class)
+    @Test(expected = RequestException.class)
     public void connection() throws Exception{
         // given
         DefaultFleetClient client = new DefaultFleetClient("127.0.0.1");
@@ -78,6 +78,6 @@ public class DefaultFleetClientTest extends AbstractTest{
         // when
         List<UnitEntityInfo> unitEntityInfoList = sut.listUnits();
         // then
-        assertThat(unitEntityInfoList).isNotEmpty();
+        assertThat(unitEntityInfoList).isEmpty();
     }
 }

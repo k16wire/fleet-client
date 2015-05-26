@@ -39,7 +39,7 @@ public class TemplateUnitTest extends AbstractTest {
     @Test
     public void launchNginxUnit() throws Exception{
         // when
-        WS2.ResponseResult result = sut.modifyUnit("apache@1.service", LAUNCHED);
+        ResponseResult result = sut.modifyUnit("apache@1.service", LAUNCHED);
         // then
         assertThat(result.statusCode).isEqualTo(409);
     }
@@ -64,7 +64,7 @@ public class TemplateUnitTest extends AbstractTest {
         String unitName = containerName+"@.service";
         units.add(unitName);
         //When
-        WS2.ResponseResult result = sut.createUnit(unitEntity, unitName);
+        ResponseResult result = sut.createUnit(unitEntity, unitName);
         //Then
         assertThat(result.statusCode).isEqualTo(201);
     }
