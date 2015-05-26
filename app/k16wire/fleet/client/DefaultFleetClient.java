@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.base.Strings.repeat;
 import static k16wire.fleet.client.WS2.*;
 import static java.lang.System.getenv;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -26,21 +27,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Date: 15. 4. 23.
  * Time: 오후 2:05
  */
-public class DefaultFleetClient implements FleetClient {
+public class DefaultFleetClient extends RestClient implements FleetClient {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 49153;
-
     private static final String VERSION = "v1";
 
-    public static final long NO_TIMEOUT = 0;
-    private static final long DEFAULT_CONNECT_TIMEOUT_MILLIS = SECONDS.toMillis(5);
-    private static final long DEFAULT_READ_TIMEOUT_MILLIS = SECONDS.toMillis(30);
-
-    private static final String GET = "get";
-    private static final String PUT = "put";
-    private static final String DELETE = "delete";
-
-    private final URI uri;
+//    private final URI uri;
 
     public DefaultFleetClient(final String uri){
         this(URI.create(uri));
@@ -151,7 +143,7 @@ public class DefaultFleetClient implements FleetClient {
         Logger.debug(method + ":" + resource.uri());
 
         try{
-            get(resource(), DEFAULT_CONNECT_TIMEOUT_MILLIS);
+            get(resource().url(), DEFAULT_CONNECT_TIMEOUT_MILLIS);
         }catch (Exception e){
             throw new FleetRequestException(method, resource().uri(),
                 400, "Fleet server is not available", e);
@@ -161,13 +153,16 @@ public class DefaultFleetClient implements FleetClient {
         try{
             switch (method){
                 case GET:
-                    result = get(resource, timeout);
+                    result = get(resource.url(), timeout);
+                    break;
+                case POST:
+                    result = post(resource.url(), timeout, body);
                     break;
                 case PUT:
-                    result = put(resource, timeout, body);
+                    result = put(resource.url(), timeout, body);
                     break;
                 case DELETE:
-                    result = delete(resource, timeout);
+                    result = delete(resource.url(), timeout);
                     break;
             }
         }catch(Exception e){
