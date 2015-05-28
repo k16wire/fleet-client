@@ -2,6 +2,7 @@ package k16wire.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Strings;
 import play.Logger;
 import play.libs.F;
 import play.libs.Json;
@@ -16,6 +17,10 @@ import java.util.concurrent.TimeUnit;
  * Time: 오후 1:58
  */
 public class WS2 extends WS{
+    public static void get(String url) throws RequestException {
+        url(url).get();
+    }
+
     public static ResponseResult get(String url,
                                      long timeout)
             throws RequestException {
@@ -61,13 +66,16 @@ public class WS2 extends WS{
     private static class WSResponseResult implements F.Function<WSResponse, ResponseResult> {
         @Override
         public ResponseResult apply(WSResponse wsResponse) throws Throwable {
-            Logger.debug(wsResponse.getStatus()+":"+wsResponse.getStatusText());
-            Logger.debug(wsResponse.getBody());
-
             ResponseResult responseResult = new ResponseResult();
             responseResult.statusCode = wsResponse.getStatus();
             responseResult.statusText = wsResponse.getStatusText();
-            responseResult.body = wsResponse.getBody();
+
+            Logger.info(wsResponse.getStatus() + ":" + wsResponse.getStatusText());
+
+            if(!Strings.isNullOrEmpty(wsResponse.getBody())){
+                Logger.debug(wsResponse.getBody());
+                responseResult.body = wsResponse.getBody();
+            }
             return responseResult;
         }
     }

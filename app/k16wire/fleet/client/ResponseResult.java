@@ -15,6 +15,14 @@ public class ResponseResult {
     public String body;
     public File file;
 
+    public ResponseResult(){
+    }
+
+    public ResponseResult(int statusCode, String statusText){
+        this.statusCode = statusCode;
+        this.statusText = statusText;
+    }
+
     public JsonNode body(){
         return Json.parse(body);
     }
