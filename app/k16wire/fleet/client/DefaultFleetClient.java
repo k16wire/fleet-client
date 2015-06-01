@@ -9,6 +9,7 @@ import k16wire.fleet.client.messages.UnitEntity;
 import k16wire.fleet.client.messages.UnitEntityInfo;
 import play.Logger;
 import play.libs.Json;
+import play.libs.ws.WSClient;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -138,10 +139,12 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
     public ResponseResult request(String method, Resource resource, long timeout, JsonNode body)
             throws FleetException {
         Logger.debug(method + ":" + resource.uri());
+        WSClient client = WS2.client();
 
         try{
-            get(resource().url(), DEFAULT_CONNECT_TIMEOUT_MILLIS);
+            client.url(resource.url()).get();
         }catch (Exception e){
+            client
             throw new RequestException(method, resource().uri(),
                 400, "Fleet server is not available", e);
         }

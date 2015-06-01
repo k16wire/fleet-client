@@ -7,6 +7,7 @@ import play.Logger;
 import play.libs.F;
 import play.libs.Json;
 import play.libs.ws.WS;
+import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import java.util.concurrent.TimeUnit;
@@ -17,8 +18,8 @@ import java.util.concurrent.TimeUnit;
  * Time: 오후 1:58
  */
 public class WS2 extends WS{
-    public static void get(String url) throws RequestException {
-        url(url).get();
+    public static void get(WSClient client, String url) throws RequestException {
+        client.url(url).get();
     }
 
     public static ResponseResult get(String url,
