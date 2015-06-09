@@ -28,6 +28,10 @@ public class Resource {
         return this;
     }
 
+    public Resource query(String key, String value, Charset charsets){
+        return query(key, URIencode(value,charsets));
+    }
+
     public Resource query(String key, String value){
         this.uri = URI.create(uri.toString() + "?"+key+"="+value);
         return this;
