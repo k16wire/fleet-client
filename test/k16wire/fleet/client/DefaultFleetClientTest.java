@@ -78,6 +78,6 @@ public class DefaultFleetClientTest extends AbstractTest{
         // when
         List<UnitEntityInfo> unitEntityInfoList = sut.listUnits();
         // then
-        assertThat(unitEntityInfoList).isEmpty();
+        assertThat(unitEntityInfoList).isNotEmpty();
     }
 }

@@ -112,7 +112,7 @@ public class SidekickTest extends AbstractTest {
         units.add(sidekickUnit);
         ResponseResult result = sut.createUnit(sidekickUnitEntity, sidekickUnit);
         //Then
-        assertThat(result.statusCode).isEqualTo(201);
+        assertThat(result.statusCode).isEqualTo(204);
     }
 
     private UnitEntity sidekickUnitEntity(String sidekickContainer, String mainUnit) {

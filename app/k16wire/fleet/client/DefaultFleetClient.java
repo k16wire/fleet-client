@@ -130,21 +130,18 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
     /**
      * Before send a request, it check connection is available.
      *
-     * @param method
-     * @param resource
-     * @param timeout
      * @return
      * @throws FleetException
      */
     public ResponseResult request(String method, Resource resource, long timeout, JsonNode body)
             throws FleetException {
         Logger.debug(method + ":" + resource.uri());
-        WSClient client = WS2.client();
+        WSClient client = WS2.newClient(-1);
 
         try{
             client.url(resource.url()).get();
         }catch (Exception e){
-            client
+            client.close();
             throw new RequestException(method, resource().uri(),
                 400, "Fleet server is not available", e);
         }
@@ -153,16 +150,16 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
         try{
             switch (method){
                 case GET:
-                    result = get(resource.url(), timeout);
+                    result = get(client, resource.url(), timeout);
                     break;
                 case POST:
-                    result = post(resource.url(), timeout, body);
+                    result = post(client, resource.url(), timeout, body);
                     break;
                 case PUT:
-                    result = put(resource.url(), timeout, body);
+                    result = put(client, resource.url(), timeout, body);
                     break;
                 case DELETE:
-                    result = delete(resource.url(), timeout);
+                    result = delete(client, resource.url(), timeout);
                     break;
             }
         }catch(Exception e){
@@ -171,6 +168,8 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
             else
                 throw new RequestException(method, resource.uri(),
                         result.statusCode, result.statusText, e);
+        }finally{
+            client.close();
         }
 
         switch (result.statusCode){
@@ -182,7 +181,7 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
         return result;
     }
 
-    private Resource resource(){
+    protected Resource resource(){
         return new Resource(uri).path("fleet").path(VERSION);
     }
 

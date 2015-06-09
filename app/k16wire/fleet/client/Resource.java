@@ -1,6 +1,9 @@
 package k16wire.fleet.client;
 
+import play.utils.UriEncoding;
+
 import java.net.URI;
+import java.nio.charset.Charset;
 
 /**
  * Created by 1001923 on 15. 5. 28..
@@ -14,6 +17,10 @@ public class Resource {
 
     public URI uri(){
         return this.uri;
+    }
+
+    public Resource path(String path, Charset charsets){
+        return path(URIencode(path, charsets));
     }
 
     public Resource path(String path){
@@ -31,6 +38,11 @@ public class Resource {
         return this;
     }
 
+    public Resource param(String key, int value){
+        this.uri = URI.create(uri.toString() + "&"+key+"="+value);
+        return this;
+    }
+
     public Resource param(String key, String value){
         this.uri = URI.create(uri.toString() + "&"+key+"="+value);
         return this;
@@ -43,5 +55,9 @@ public class Resource {
 
     public String url(){
         return this.uri.toString();
+    }
+
+    public static String URIencode (String s, Charset charsets){
+        return UriEncoding.encodePathSegment(s, charsets.name());
     }
 }

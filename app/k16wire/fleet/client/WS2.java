@@ -22,18 +22,28 @@ public class WS2 extends WS{
         client.url(url).get();
     }
 
-    public static ResponseResult get(String url,
+    public static ResponseResult get(String url, long timeout)
+            throws RequestException {
+        return get(client(), url, timeout);
+    }
+
+    public static ResponseResult get(WSClient client,String url,
                                      long timeout)
             throws RequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(url)
+        F.Promise<ResponseResult> responseResultPromise = client.url(url)
                 .get()
                 .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
     public static ResponseResult post(String url, long timeout, JsonNode body)
+            throws RequestException{
+        return post(client(), url, timeout, body);
+    }
+
+    public static ResponseResult post(WSClient client,String url, long timeout, JsonNode body)
             throws RequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(url)
+        F.Promise<ResponseResult> responseResultPromise = client.url(url)
                 .post(body)
                 .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
@@ -41,16 +51,26 @@ public class WS2 extends WS{
 
     public static ResponseResult put(String url, long timeout, JsonNode body)
             throws RequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(url)
+        return put(client(), url, timeout, body);
+    }
+
+    public static ResponseResult put(WSClient client,String url, long timeout, JsonNode body)
+            throws RequestException {
+        F.Promise<ResponseResult> responseResultPromise = client.url(url)
                 .put(body)
                 .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
     }
 
-    public static ResponseResult delete(String url,
+    public static ResponseResult delete(String url, long timeout)
+            throws RequestException {
+        return delete(client(), url, timeout);
+    }
+
+    public static ResponseResult delete(WSClient client,String url,
                                         long timeout)
             throws RequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(url)
+        F.Promise<ResponseResult> responseResultPromise = client.url(url)
                 .delete()
                 .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);
@@ -58,7 +78,12 @@ public class WS2 extends WS{
 
     public static ResponseResult options(String url, long timeout)
             throws RequestException {
-        F.Promise<ResponseResult> responseResultPromise = url(url)
+        return options(client(), url, timeout);
+    }
+
+    public static ResponseResult options(WSClient client,String url, long timeout)
+            throws RequestException {
+        F.Promise<ResponseResult> responseResultPromise = client.url(url)
                 .options()
                 .map(new WSResponseResult());
         return responseResultPromise.get(timeout, TimeUnit.MILLISECONDS);

@@ -14,10 +14,14 @@ public class RestClient {
     protected static final String DELETE = "delete";
     protected static final String OPTIONS = "options";
 
-    protected static final long NO_TIMEOUT = 0;
+    protected static final long NO_TIMEOUT = SECONDS.toMillis(1000);
     protected static final long DEFAULT_CONNECT_TIMEOUT_MILLIS = SECONDS.toMillis(5);
     protected static final long DEFAULT_READ_TIMEOUT_MILLIS = SECONDS.toMillis(30);
     protected static final long DEFAULT_WRITE_TIMEOUT_MILLIS = SECONDS.toMillis(120);
 
     protected URI uri;
+
+    protected Resource resource(){
+        return new Resource(uri);
+    }
 }

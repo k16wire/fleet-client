@@ -1,4 +1,4 @@
-package fleet;
+package k16wire.fleet.client;
 
 import com.google.common.collect.Maps;
 
