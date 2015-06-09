@@ -46,6 +46,9 @@ public class Resource {
         this.uri = URI.create(uri.toString() + "&"+key+"="+value);
         return this;
     }
+    public Resource param(String key, String value, Charset charsets){
+        return param(key, URIencode(value,charsets));
+    }
 
     public Resource param(String key, String value){
         this.uri = URI.create(uri.toString() + "&"+key+"="+value);

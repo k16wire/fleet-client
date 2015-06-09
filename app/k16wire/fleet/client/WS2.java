@@ -1,11 +1,9 @@
 package k16wire.fleet.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import play.Logger;
 import play.libs.F;
-import play.libs.Json;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -103,25 +101,6 @@ public class WS2 extends WS{
                 responseResult.body = wsResponse.getBody();
             }
             return responseResult;
-        }
-    }
-
-    public static class Json2 {
-        private ObjectNode objectNode;
-
-        public JsonNode jsonNode(){
-            return this.objectNode;
-        }
-
-        public Json2 put(String key, String value){
-            this.objectNode.put(key, value);
-            return this;
-        }
-
-        public static Json2 body(){
-            Json2 json2 = new Json2();
-            json2.objectNode = Json.newObject();
-            return json2;
         }
     }
 }
