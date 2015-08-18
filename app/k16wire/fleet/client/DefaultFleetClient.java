@@ -17,9 +17,9 @@ import java.util.List;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static k16wire.fleet.client.WS2.*;
 import static java.lang.System.getenv;
-import static k16wire.fleet.client.WS2.Json2.*;
+import static k16wire.fleet.client.Json2.body;
+import static k16wire.fleet.client.WS2.*;
 
 /**
  * User: 1001923
