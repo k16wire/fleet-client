@@ -33,8 +33,8 @@ public class DefaultFleetClient extends RestClient implements FleetClient {
     private static final int DEFAULT_PORT = 49153;
     private static final String VERSION = "v1";
 
-    public DefaultFleetClient(final String uri){
-        this(URI.create(uri));
+    public DefaultFleetClient(final String hostText){
+        this(URI.create("http" + "://" + hostText + ":" + DEFAULT_PORT));
     }
 
     public DefaultFleetClient(final URI uri){
